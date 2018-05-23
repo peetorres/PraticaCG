@@ -9,7 +9,7 @@ int COLUNAS = 200.0;
 int LINHAS = 200.0;
 int x0,y0,x1,y1;
 int x2,y2,x3,y3;
-int matRaster[201][201];
+int matRaster[200][200];
 
 
 /*Menu de Funcoes*/
@@ -48,16 +48,14 @@ void preenchimentoAlastramento(int x, int y){
 }
 
 void drawBaleia(){
-    x0=50; y0=50;x1=50;y1=75;x2=75;y2=90;x3=110;y3=62;
-    int x4=130; int y4=70;int x5=130;int y5=50;int x6=110;int y6=60;int x7=100;int y7=50;
+    x0=50; y0=50;x1=50;y1=75;x2=75;y2=90;x3=130;y3=50;
+    int x4=130; int y4=70;int x5=100;int y5=50;
     line(x0,y0,x1,y1);
     line(x1,y1,x2,y2);
     line(x2,y2,x3,y3);
     line(x3,y3,x4,y4);
     line(x4,y4,x5,y5);
-    line(x5,y5,x6,y6);
-    line(x6,y6,x7,y7);
-    line(x7,y7,x0,y0);
+    line(x5,y5,x0,y0);
 }
 
 void drawPolygonLine(){
@@ -111,7 +109,7 @@ void display(){
     drawBaleia();
     //drawPolygonLine();
     preenchimentoAlastramento(60,60);
-
+    preenchimentoAlastramento(125,65);
 }
 
 void init(){
