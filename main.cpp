@@ -7,7 +7,7 @@ using namespace std ;
 /*Variaveis Globais*/
 int matRaster[200][200];
 GLfloat angle = 0, fAspect;
-int smooth = 0;
+int mode = 0;// Mude para 0 para qualquer teste diferente do 4
 
 /*Menu de Funcoes*/
 void unit(int, int, float, float, float, float);
@@ -134,10 +134,20 @@ void unit(int x, int y,float r, float g, float b, float alpha){
 
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
-    //drawLine(); // Descomente essa para mostrar o resultado do exercicio 1
-    //drawPolygonLine(); // Descomente essa linha para mostrar o resultado do exercicio 2
-    //drawBaleia(); // Descomente essa linha para mostrar o resultado do exercicio 3
-    drawCube(); //Descomente essa linha para mostrar o resultado do exercicio 4
+    switch(mode){
+    case 1:
+        drawLine();
+        break;
+    case 2:
+        drawPolygonLine();
+        break;
+    case 3:
+        drawBaleia();
+        break;
+    case 4:
+        drawCube();
+        break;
+    }
 }
 
 void AlteraTamanhoJanela(GLsizei w, GLsizei h){
@@ -186,7 +196,7 @@ void init(){
 
 int main(int argc, char** argv){
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
+    glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
     glutInitWindowSize(600,600);
     glutInitWindowPosition(150,150);
 
@@ -195,9 +205,13 @@ int main(int argc, char** argv){
     init();
     glutDisplayFunc(display);
 
-    //glRotatef(angle, 0, 0, 1);
-    glutMouseFunc(gerenciaMouse);
-    glutReshapeFunc(AlteraTamanhoJanela);
+    cout << "Insira qual exercicio voce deseja testar:" ;
+    cin >> mode;
+
+    if(mode == 4){
+        glutMouseFunc(gerenciaMouse);
+        glutReshapeFunc(AlteraTamanhoJanela);
+    }
 
     glutMainLoop();
     return 0;
