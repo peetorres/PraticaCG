@@ -6,6 +6,8 @@ using namespace std ;
 
 /*Variaveis Globais*/
 int matRaster[200][200];
+GLfloat angle = 0, fAspect;
+int smooth = 0;
 
 /*Menu de Funcoes*/
 void unit(int, int, float, float, float, float);
@@ -14,9 +16,13 @@ void init();
 void line(int, int, int, int);
 void setPixel(int, int);
 void preenchimentoAlastramento();
+void EspecificaParametrosVisualizacao();
+void AlteraTamanhoJanela(GLsizei, GLsizei);
+void gerenciaMouse(int,int, int, int);
 void drawPolygonLine();
 void drawLine();
 void drawBaleia();
+void drawCube();
 
 void preenchimentoAlastramento(int x, int y){
     if(matRaster[x-1][y]!=1){
@@ -74,6 +80,20 @@ void drawLine(){
     line(x0,y0,x1,y1);
 }
 
+void drawCube(){
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glEnable(GL_POINT_SMOOTH);
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POLYGON_SMOOTH);
+
+    glRotatef(angle, 0, 1, 0);
+    glColor3f(0.0f,0.0f,1.0f);
+    glutSolidCube(100);
+    glutSwapBuffers();
+}
+
 void setPixel(int x, int y){
     matRaster[x][y] = 1;
     unit(x, y, 0, 0, 1.0, 1.0);
@@ -116,7 +136,33 @@ void display(){
     glClear(GL_COLOR_BUFFER_BIT);
     //drawLine(); // Descomente essa para mostrar o resultado do exercicio 1
     //drawPolygonLine(); // Descomente essa linha para mostrar o resultado do exercicio 2
-    drawBaleia(); // Descomente essa linha para mostrar o resultado do exercicio 3
+    //drawBaleia(); // Descomente essa linha para mostrar o resultado do exercicio 3
+    drawCube(); //Descomente essa linha para mostrar o resultado do exercicio 4
+}
+
+void AlteraTamanhoJanela(GLsizei w, GLsizei h){
+    if(h==0) h = 1;
+    glViewport(0,0,w,h);
+    fAspect = (GLfloat)w/(GLfloat)h;
+    EspecificaParametrosVisualizacao();
+}
+
+void EspecificaParametrosVisualizacao(){
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45, fAspect, 0.1, 500);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(-150,80,200,0,0,0,0,1,0);
+}
+
+void gerenciaMouse(int button, int state, int x, int y){
+    if (button == GLUT_LEFT_BUTTON)
+            angle -= 10;
+    if (button == GLUT_RIGHT_BUTTON)
+            angle += 10;
+    EspecificaParametrosVisualizacao();
+    glutPostRedisplay();
 }
 
 void init(){
@@ -127,16 +173,20 @@ void init(){
     glLoadIdentity();
     glOrtho (0.0 , 200 , 0.0 , 200 , 0, 200);
     glMatrixMode(GL_MODELVIEW);
+
     for(int i=0; i<200; i++){
         for(int j=0; j<200 ;j++){
             matRaster[i][j] = 0;
         }
     }
+
+    /*Funcoes Exercicio 4*/
+    angle = 45;
 }
 
 int main(int argc, char** argv){
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutInitWindowSize(600,600);
     glutInitWindowPosition(150,150);
 
@@ -144,6 +194,11 @@ int main(int argc, char** argv){
 
     init();
     glutDisplayFunc(display);
+
+    //glRotatef(angle, 0, 0, 1);
+    glutMouseFunc(gerenciaMouse);
+    glutReshapeFunc(AlteraTamanhoJanela);
+
     glutMainLoop();
     return 0;
 }
